@@ -1,4 +1,12 @@
-/GUI/GUI
-/GUI/x64
-/GUI/packages
-/.vs
+# MCU
+*/Debug
+*.ld
+
+# GUI
+*/GUI
+*/x64
+*/packages
+*.lnk
+
+# DB
+
