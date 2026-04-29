@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include "map_popup.h"
+#include "db_popup.h"
 
 namespace GUI {
 
@@ -60,6 +61,8 @@ namespace GUI {
 	private: System::Windows::Forms::Button^ buttonMap;
 
 	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::MenuStrip^ menuStrip1;
+	private: System::Windows::Forms::ToolStripMenuItem^ dbMenuItem;
 
 	protected:
 
@@ -101,8 +104,11 @@ namespace GUI {
 			this->labelSat = (gcnew System::Windows::Forms::Label());
 			this->dataSat = (gcnew System::Windows::Forms::Label());
 			this->buttonOpenCOM = (gcnew System::Windows::Forms::Button());
+			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+			this->dbMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->tableLayoutPanel1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chartAcc))->BeginInit();
+			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -137,7 +143,7 @@ namespace GUI {
 			this->tableLayoutPanel1->Controls->Add(this->buttonOpenCOM, 0, 3);
 			this->tableLayoutPanel1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->tableLayoutPanel1->GrowStyle = System::Windows::Forms::TableLayoutPanelGrowStyle::FixedSize;
-			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 0);
+			this->tableLayoutPanel1->Location = System::Drawing::Point(0, 26);
 			this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
 			this->tableLayoutPanel1->RowCount = 6;
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 6.862745F)));
@@ -146,7 +152,7 @@ namespace GUI {
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 5.882353F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 68.62745F)));
 			this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 6.862745F)));
-			this->tableLayoutPanel1->Size = System::Drawing::Size(884, 499);
+			this->tableLayoutPanel1->Size = System::Drawing::Size(884, 473);
 			this->tableLayoutPanel1->TabIndex = 0;
 			// 
 			// comboBaudRate
@@ -158,7 +164,7 @@ namespace GUI {
 				L"9600", L"19200", L"38400", L"57600", L"115200",
 					L"230400", L"460800", L"921600"
 			});
-			this->comboBaudRate->Location = System::Drawing::Point(271, 67);
+			this->comboBaudRate->Location = System::Drawing::Point(271, 62);
 			this->comboBaudRate->Name = L"comboBaudRate";
 			this->comboBaudRate->Size = System::Drawing::Size(121, 21);
 			this->comboBaudRate->TabIndex = 4;
@@ -168,7 +174,7 @@ namespace GUI {
 			this->comboPort->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->comboPort->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
 			this->comboPort->FormattingEnabled = true;
-			this->comboPort->Location = System::Drawing::Point(271, 38);
+			this->comboPort->Location = System::Drawing::Point(271, 35);
 			this->comboPort->Name = L"comboPort";
 			this->comboPort->Size = System::Drawing::Size(121, 21);
 			this->comboPort->TabIndex = 2;
@@ -177,10 +183,10 @@ namespace GUI {
 			// 
 			this->tableLayoutPanel1->SetColumnSpan(this->textBoxTerminal, 2);
 			this->textBoxTerminal->Dock = System::Windows::Forms::DockStyle::Fill;
-			this->textBoxTerminal->Location = System::Drawing::Point(3, 124);
+			this->textBoxTerminal->Location = System::Drawing::Point(3, 116);
 			this->textBoxTerminal->Name = L"textBoxTerminal";
 			this->textBoxTerminal->ReadOnly = true;
-			this->textBoxTerminal->Size = System::Drawing::Size(436, 336);
+			this->textBoxTerminal->Size = System::Drawing::Size(436, 318);
 			this->textBoxTerminal->TabIndex = 6;
 			this->textBoxTerminal->TabStop = false;
 			this->textBoxTerminal->Text = L"";
@@ -190,7 +196,7 @@ namespace GUI {
 			this->labelCOMControl->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->labelCOMControl->AutoSize = true;
 			this->tableLayoutPanel1->SetColumnSpan(this->labelCOMControl, 2);
-			this->labelCOMControl->Location = System::Drawing::Point(165, 10);
+			this->labelCOMControl->Location = System::Drawing::Point(165, 9);
 			this->labelCOMControl->Name = L"labelCOMControl";
 			this->labelCOMControl->Size = System::Drawing::Size(111, 13);
 			this->labelCOMControl->TabIndex = 0;
@@ -200,7 +206,7 @@ namespace GUI {
 			// 
 			this->labelCOMSelect->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->labelCOMSelect->AutoSize = true;
-			this->labelCOMSelect->Location = System::Drawing::Point(62, 42);
+			this->labelCOMSelect->Location = System::Drawing::Point(62, 39);
 			this->labelCOMSelect->Name = L"labelCOMSelect";
 			this->labelCOMSelect->Size = System::Drawing::Size(97, 13);
 			this->labelCOMSelect->TabIndex = 1;
@@ -210,7 +216,7 @@ namespace GUI {
 			// 
 			this->labelCOMBaudRate->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->labelCOMBaudRate->AutoSize = true;
-			this->labelCOMBaudRate->Location = System::Drawing::Point(51, 71);
+			this->labelCOMBaudRate->Location = System::Drawing::Point(51, 66);
 			this->labelCOMBaudRate->Name = L"labelCOMBaudRate";
 			this->labelCOMBaudRate->Size = System::Drawing::Size(118, 13);
 			this->labelCOMBaudRate->TabIndex = 3;
@@ -220,7 +226,7 @@ namespace GUI {
 			// 
 			this->labelGPS->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->labelGPS->AutoSize = true;
-			this->labelGPS->Location = System::Drawing::Point(507, 10);
+			this->labelGPS->Location = System::Drawing::Point(507, 9);
 			this->labelGPS->Name = L"labelGPS";
 			this->labelGPS->Size = System::Drawing::Size(91, 13);
 			this->labelGPS->TabIndex = 8;
@@ -230,7 +236,7 @@ namespace GUI {
 			// 
 			this->labelTime->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->labelTime->AutoSize = true;
-			this->labelTime->Location = System::Drawing::Point(741, 10);
+			this->labelTime->Location = System::Drawing::Point(741, 9);
 			this->labelTime->Name = L"labelTime";
 			this->labelTime->Size = System::Drawing::Size(65, 13);
 			this->labelTime->TabIndex = 12;
@@ -240,7 +246,7 @@ namespace GUI {
 			// 
 			this->dataGPS->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->dataGPS->AutoSize = true;
-			this->dataGPS->Location = System::Drawing::Point(544, 42);
+			this->dataGPS->Location = System::Drawing::Point(544, 39);
 			this->dataGPS->Name = L"dataGPS";
 			this->dataGPS->Size = System::Drawing::Size(16, 13);
 			this->dataGPS->TabIndex = 9;
@@ -250,7 +256,7 @@ namespace GUI {
 			// 
 			this->dataTime->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->dataTime->AutoSize = true;
-			this->dataTime->Location = System::Drawing::Point(765, 42);
+			this->dataTime->Location = System::Drawing::Point(765, 39);
 			this->dataTime->Name = L"dataTime";
 			this->dataTime->Size = System::Drawing::Size(16, 13);
 			this->dataTime->TabIndex = 13;
@@ -267,7 +273,7 @@ namespace GUI {
 			legend1->Docking = System::Windows::Forms::DataVisualization::Charting::Docking::Bottom;
 			legend1->Name = L"Legend1";
 			this->chartAcc->Legends->Add(legend1);
-			this->chartAcc->Location = System::Drawing::Point(445, 124);
+			this->chartAcc->Location = System::Drawing::Point(445, 116);
 			this->chartAcc->Name = L"chartAcc";
 			series1->ChartArea = L"ChartArea1";
 			series1->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Line;
@@ -284,7 +290,7 @@ namespace GUI {
 			this->chartAcc->Series->Add(series1);
 			this->chartAcc->Series->Add(series2);
 			this->chartAcc->Series->Add(series3);
-			this->chartAcc->Size = System::Drawing::Size(436, 336);
+			this->chartAcc->Size = System::Drawing::Size(436, 318);
 			this->chartAcc->TabIndex = 16;
 			this->chartAcc->TabStop = false;
 			this->chartAcc->Text = L"chart1";
@@ -293,7 +299,7 @@ namespace GUI {
 			// 
 			this->buttonTerminalClear->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->tableLayoutPanel1->SetColumnSpan(this->buttonTerminalClear, 2);
-			this->buttonTerminalClear->Location = System::Drawing::Point(183, 469);
+			this->buttonTerminalClear->Location = System::Drawing::Point(183, 443);
 			this->buttonTerminalClear->Name = L"buttonTerminalClear";
 			this->buttonTerminalClear->Size = System::Drawing::Size(75, 23);
 			this->buttonTerminalClear->TabIndex = 7;
@@ -304,7 +310,7 @@ namespace GUI {
 			// buttonCopyGPS
 			// 
 			this->buttonCopyGPS->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->buttonCopyGPS->Location = System::Drawing::Point(515, 67);
+			this->buttonCopyGPS->Location = System::Drawing::Point(515, 62);
 			this->buttonCopyGPS->Name = L"buttonCopyGPS";
 			this->buttonCopyGPS->Size = System::Drawing::Size(75, 21);
 			this->buttonCopyGPS->TabIndex = 10;
@@ -315,7 +321,7 @@ namespace GUI {
 			// buttonMap
 			// 
 			this->buttonMap->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->buttonMap->Location = System::Drawing::Point(515, 96);
+			this->buttonMap->Location = System::Drawing::Point(515, 89);
 			this->buttonMap->Name = L"buttonMap";
 			this->buttonMap->Size = System::Drawing::Size(75, 21);
 			this->buttonMap->TabIndex = 11;
@@ -327,7 +333,7 @@ namespace GUI {
 			// 
 			this->labelSat->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->labelSat->AutoSize = true;
-			this->labelSat->Location = System::Drawing::Point(726, 71);
+			this->labelSat->Location = System::Drawing::Point(726, 66);
 			this->labelSat->Name = L"labelSat";
 			this->labelSat->Size = System::Drawing::Size(95, 13);
 			this->labelSat->TabIndex = 14;
@@ -337,7 +343,7 @@ namespace GUI {
 			// 
 			this->dataSat->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->dataSat->AutoSize = true;
-			this->dataSat->Location = System::Drawing::Point(765, 100);
+			this->dataSat->Location = System::Drawing::Point(765, 93);
 			this->dataSat->Name = L"dataSat";
 			this->dataSat->Size = System::Drawing::Size(16, 13);
 			this->dataSat->TabIndex = 15;
@@ -348,13 +354,30 @@ namespace GUI {
 			this->buttonOpenCOM->Anchor = System::Windows::Forms::AnchorStyles::None;
 			this->buttonOpenCOM->AutoSize = true;
 			this->tableLayoutPanel1->SetColumnSpan(this->buttonOpenCOM, 2);
-			this->buttonOpenCOM->Location = System::Drawing::Point(164, 95);
+			this->buttonOpenCOM->Location = System::Drawing::Point(164, 89);
 			this->buttonOpenCOM->Name = L"buttonOpenCOM";
-			this->buttonOpenCOM->Size = System::Drawing::Size(114, 23);
+			this->buttonOpenCOM->Size = System::Drawing::Size(114, 21);
 			this->buttonOpenCOM->TabIndex = 5;
 			this->buttonOpenCOM->Text = L"Atidaryti COM PORT";
 			this->buttonOpenCOM->UseVisualStyleBackColor = true;
 			this->buttonOpenCOM->Click += gcnew System::EventHandler(this, &terminal::buttonOpenCOM_Click);
+			// 
+			// menuStrip1
+			// 
+			this->menuStrip1->ImageScalingSize = System::Drawing::Size(18, 18);
+			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->dbMenuItem });
+			this->menuStrip1->Location = System::Drawing::Point(0, 0);
+			this->menuStrip1->Name = L"menuStrip1";
+			this->menuStrip1->Size = System::Drawing::Size(884, 26);
+			this->menuStrip1->TabIndex = 1;
+			this->menuStrip1->Text = L"menuStrip";
+			// 
+			// dbMenuItem
+			// 
+			this->dbMenuItem->Name = L"dbMenuItem";
+			this->dbMenuItem->Size = System::Drawing::Size(108, 22);
+			this->dbMenuItem->Text = L"Duomenų bazė";
+			this->dbMenuItem->Click += gcnew System::EventHandler(this, &terminal::dbMenuItem_Click);
 			// 
 			// terminal
 			// 
@@ -362,6 +385,8 @@ namespace GUI {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(884, 499);
 			this->Controls->Add(this->tableLayoutPanel1);
+			this->Controls->Add(this->menuStrip1);
+			this->MainMenuStrip = this->menuStrip1;
 			this->MinimumSize = System::Drawing::Size(900, 540);
 			this->Name = L"terminal";
 			this->Text = L"Kompiuterinės komunikacijos 2 lab.";
@@ -369,7 +394,10 @@ namespace GUI {
 			this->tableLayoutPanel1->ResumeLayout(false);
 			this->tableLayoutPanel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chartAcc))->EndInit();
+			this->menuStrip1->ResumeLayout(false);
+			this->menuStrip1->PerformLayout();
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -379,6 +407,7 @@ namespace GUI {
 		static array<String^>^ prevData = nullptr;
 		static String^ coords;
 		map_popup^ mapWindow;
+		db_popup^ dbWindow;
 		int data_i = 0;
 
 		delegate void DataUpdatedHandler(String^ lat, String^ lon);
@@ -517,6 +546,12 @@ namespace GUI {
 			mapWindow->FormClosed += gcnew FormClosedEventHandler(this, &terminal::MapClosed);
 
 			mapWindow->Show();
+		}
+
+		// Atidaryti duomenų bazės langą
+		private: System::Void dbMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+			dbWindow = gcnew db_popup();
+			dbWindow->Show();
 		}
 };
 }

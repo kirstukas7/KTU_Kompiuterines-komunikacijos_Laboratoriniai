@@ -116,6 +116,9 @@
     <Reference Include="Microsoft.Web.WebView2.WinForms">
       <HintPath>packages\Microsoft.Web.WebView2.1.0.3856.49\lib\net462\Microsoft.Web.WebView2.WinForms.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\Programos\MySQL\MySQL Connector NET 9.7\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -127,6 +130,9 @@
     <ClCompile Include="terminal.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="db_popup.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="map_popup.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -135,6 +141,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="db_popup.resx">
+      <DependentUpon>db_popup.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="map_popup.resx">
       <DependentUpon>map_popup.h</DependentUpon>
     </EmbeddedResource>
