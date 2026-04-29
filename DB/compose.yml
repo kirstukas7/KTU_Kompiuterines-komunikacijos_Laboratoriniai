@@ -4,9 +4,10 @@ services:
     container_name: mysql
     restart: always
     networks:
-      - traefik
-    ports:
-      - "3306:3306/tcp"
+      traefik:
+        ipv4_address: 172.19.0.8
+    #ports:
+      #- "3306:3306/tcp"
     env_file:
       - db.env
     volumes:
@@ -19,7 +20,8 @@ services:
     depends_on:
       - db
     networks:
-      - traefik
+      traefik:
+        ipv4_address: 172.19.0.9
     labels:
       traefik.enable: 'true'
       traefik.http.routers.phpmyadmin.rule: Host(`${web_url}`)
