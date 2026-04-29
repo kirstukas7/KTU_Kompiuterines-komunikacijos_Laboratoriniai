@@ -304,9 +304,9 @@ namespace GUI {
 			// buttonCopyGPS
 			// 
 			this->buttonCopyGPS->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->buttonCopyGPS->Location = System::Drawing::Point(515, 66);
+			this->buttonCopyGPS->Location = System::Drawing::Point(515, 67);
 			this->buttonCopyGPS->Name = L"buttonCopyGPS";
-			this->buttonCopyGPS->Size = System::Drawing::Size(75, 23);
+			this->buttonCopyGPS->Size = System::Drawing::Size(75, 21);
 			this->buttonCopyGPS->TabIndex = 10;
 			this->buttonCopyGPS->Text = L"Kopijuoti";
 			this->buttonCopyGPS->UseVisualStyleBackColor = true;
@@ -315,9 +315,9 @@ namespace GUI {
 			// buttonMap
 			// 
 			this->buttonMap->Anchor = System::Windows::Forms::AnchorStyles::None;
-			this->buttonMap->Location = System::Drawing::Point(515, 95);
+			this->buttonMap->Location = System::Drawing::Point(515, 96);
 			this->buttonMap->Name = L"buttonMap";
-			this->buttonMap->Size = System::Drawing::Size(75, 23);
+			this->buttonMap->Size = System::Drawing::Size(75, 21);
 			this->buttonMap->TabIndex = 11;
 			this->buttonMap->Text = L"Žemėlapis";
 			this->buttonMap->UseVisualStyleBackColor = true;
@@ -376,7 +376,13 @@ namespace GUI {
 		static SerialPort^ serialPort;
 		static String^ serialData;
 		static array<String^>^ splitData = nullptr;
+		static array<String^>^ prevData = nullptr;
 		static String^ coords;
+		map_popup^ mapWindow;
+		int data_i = 0;
+
+		delegate void DataUpdatedHandler(String^ lat, String^ lon);
+		event DataUpdatedHandler^ OnDataUpdated;
 
 		// Nunulinami/atstatomi rodomi duomenys
 		void ResetData() {
@@ -400,12 +406,16 @@ namespace GUI {
 		// Atnaujinami duomenys
 		void UpdateData() {
 			int accX, accY, accZ;
+			data_i++;
+			if (data_i >= 16)
+				data_i = 0;
 
 			// Atnaujinamas terminalas
 			this->textBoxTerminal->AppendText(serialData);
 			this->textBoxTerminal->ScrollToCaret();
 
 			// Išskaidomi duomenys
+			prevData = splitData;
 			splitData = serialData->Split(',');
 
 			// Nustatomi duomenys
@@ -423,12 +433,25 @@ namespace GUI {
 			this->chartAcc->Series["AccX"]->Points->Add(accX);
 			this->chartAcc->Series["AccY"]->Points->Add(accY);
 			this->chartAcc->Series["AccZ"]->Points->Add(accZ);
+
+			if (prevData != nullptr && splitData != nullptr) return;
+			// Pasikeitė koordinatės
+			if ((prevData[2] != splitData[2] || prevData[3] != splitData[3]) && data_i == 0)
+				OnDataUpdated(splitData[2], splitData[3]);
 		}
 
 		// Funkcija iškviečiama kai atsiranda nauji duomenys
 		void DataReceivedHandler(System::Object^ sender, SerialDataReceivedEventArgs^ e) {
 			serialData = serialPort->ReadExisting();
 			this->Invoke(gcnew MethodInvoker(this, &terminal::UpdateData));
+		}
+
+		// Išimamas handler, kai uždaromas langas
+		void MapClosed(Object^ sender, FormClosedEventArgs^ e) {
+			if (mapWindow != nullptr) {
+				OnDataUpdated -= gcnew DataUpdatedHandler(mapWindow, &map_popup::UpdateWeb);
+				mapWindow = nullptr;
+			}
 		}
 
 		private: System::Void terminal_Load(System::Object^ sender, System::EventArgs^ e) {
@@ -487,8 +510,13 @@ namespace GUI {
 				MessageBox::Show("Nėra duomenų");
 				return;
 			}
-			map_popup^ map = gcnew map_popup(splitData[2],splitData[3]);
-			map->Show();
+			mapWindow = gcnew map_popup(splitData[2],splitData[3]);
+
+			// Pririšamas atnaujinimo event
+			OnDataUpdated += gcnew DataUpdatedHandler(mapWindow, &map_popup::UpdateWeb);
+			mapWindow->FormClosed += gcnew FormClosedEventHandler(this, &terminal::MapClosed);
+
+			mapWindow->Show();
 		}
 };
 }

@@ -96,8 +96,12 @@ namespace GUI {
 		String^ lat = L"";
 		String^ lon = L"";
 
+		public: void UpdateWeb(String^ nlat, String^ nlon) {
+			this->webView->Source = gcnew Uri(L"https://www.openstreetmap.org/?mlat=" + nlat + "&mlon=" + nlon + "&zoom=18", System::UriKind::Absolute);
+		}
+
 		private: System::Void map_popup_Load(System::Object^ sender, System::EventArgs^ e) {
-			this->webView->Source = gcnew Uri(L"https://www.openstreetmap.org/?mlat="+lat+"&mlon="+lon+"&zoom=18", System::UriKind::Absolute);
+			UpdateWeb(lat, lon);
 		}
 	};
 }
