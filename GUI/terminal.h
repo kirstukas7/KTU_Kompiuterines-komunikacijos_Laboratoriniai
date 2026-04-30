@@ -407,10 +407,11 @@ namespace GUI {
 		AppData^ splitData = gcnew AppData();
 		static array<String^>^ prevData = nullptr;
 		static String^ coords;
-		map_popup^ mapWindow;
-		db_popup^ dbWindow;
-		int data_i = 0;
-		bool updateReady = true;
+		static map_popup^ mapWindow;
+		static db_popup^ dbWindow;
+		static int data_i = 0;
+		static bool updateReady = false;
+		static bool comOpen = false;
 
 		event SimpleHandler^ OnDataUpdated;
 
@@ -445,13 +446,14 @@ namespace GUI {
 				updateReady = true;
 			}
 
-			// Atnaujinamas terminalas
-			this->textBoxTerminal->AppendText(serialData);
-			this->textBoxTerminal->ScrollToCaret();
-
-			// Išskaidomi duomenys
-			prevData = splitData->d;
-			splitData->d = serialData->Split(',');
+			if (comOpen == true) {
+				// Atnaujinamas terminalas
+				this->textBoxTerminal->AppendText(serialData);
+				this->textBoxTerminal->ScrollToCaret();
+				// Išskaidomi duomenys
+				prevData = splitData->d;
+				splitData->d = serialData->Split(',');
+			}
 
 			// Nustatomi duomenys
 			this->dataTime->Text = splitData->d[1];
@@ -505,7 +507,6 @@ namespace GUI {
 
 		// Atidaryti prievadą
 		private: System::Void buttonOpenCOM_Click(System::Object^ sender, System::EventArgs^ e) {
-			static bool comOpen = false;
 			if (comOpen == false) { // Prievadas neatidarytas
 				if (this->comboPort->SelectedItem == nullptr) {
 					MessageBox::Show("Nepasirinktas COM prievadas");
@@ -558,6 +559,7 @@ namespace GUI {
 
 		// Atidaryti duomenų bazės langą
 		private: System::Void dbMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+			if (splitData->d == nullptr) splitData->d = gcnew array<String^>(8);
 			dbWindow = gcnew db_popup(splitData, gcnew SimpleHandler(this, &terminal::UpdateData));
 			
 			dbWindow->Show();

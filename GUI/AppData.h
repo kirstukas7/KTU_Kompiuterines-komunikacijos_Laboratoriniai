@@ -6,6 +6,10 @@ namespace GUI {
 	public delegate void SimpleHandler();
 	public ref class AppData {
 	public:
-		array<String^>^ d = nullptr;
+		array<String^>^ d;
+
+		AppData() {
+			d = gcnew array<String^>(8);
+		}
 	};
 }
