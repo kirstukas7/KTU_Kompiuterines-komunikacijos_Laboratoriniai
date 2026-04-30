@@ -245,8 +245,9 @@ namespace GUI {
 
 		void WriteToDB() {
 			try {
-				String^ sql = "INSERT INTO `"+this->textBoxTable->Text+"` (LAIKAS,PLATUMA,ILGUMA,PALYDOVAI,ACCX,ACCY,ACCZ) VALUES (@laikas,@platuma,@ilguma,@palydovai,@accx,@accy,@accz)";
+				String^ sql = "INSERT INTO `"+this->textBoxTable->Text+"` (INICIALAI,LAIKAS,PLATUMA,ILGUMA,PALYDOVAI,ACCX,ACCY,ACCZ) VALUES (@inicialai,@laikas,@platuma,@ilguma,@palydovai,@accx,@accy,@accz)";
 				MySqlCommand^ cmd = gcnew MySqlCommand(sql, conn);
+				cmd->Parameters->AddWithValue("@inicialai", appData->d[0]);
 				cmd->Parameters->AddWithValue("@laikas", appData->d[1]);
 				cmd->Parameters->AddWithValue("@platuma", appData->d[2]);
 				cmd->Parameters->AddWithValue("@ilguma", appData->d[3]);
@@ -269,12 +270,12 @@ namespace GUI {
 		void ReadFromDB() {
 			try {
 				if (appData->d == nullptr) appData->d = gcnew array<String^>(8);
-				String^ sql = "SELECT LAIKAS, PLATUMA, ILGUMA, PALYDOVAI, ACCX, ACCY, ACCZ FROM "+this->textBoxTable->Text+" ORDER BY ID DESC LIMIT 1";
+				String^ sql = "SELECT INICIALAI, LAIKAS, PLATUMA, ILGUMA, PALYDOVAI, ACCX, ACCY, ACCZ FROM "+this->textBoxTable->Text+" ORDER BY ID DESC LIMIT 1";
 				MySqlCommand^ cmd = gcnew MySqlCommand(sql, conn);
 				MySqlDataReader^ rdr = cmd->ExecuteReader();
 				rdr->Read();
-				for (int i = 0; i < 7; i++) {
-					appData->d[i+1] = rdr[i]->ToString();
+				for (int i = 0; i < 8; i++) {
+					appData->d[i] = rdr[i]->ToString();
 				}
 				rdr->Close();
 			}
