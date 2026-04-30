@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <Windows.h>
 #include <string>
+#include "AppData.h"
 #include "map_popup.h"
 #include "db_popup.h"
 
@@ -403,15 +404,15 @@ namespace GUI {
 #pragma endregion
 		static SerialPort^ serialPort;
 		static String^ serialData;
-		static array<String^>^ splitData = nullptr;
+		AppData^ splitData = gcnew AppData();
 		static array<String^>^ prevData = nullptr;
 		static String^ coords;
 		map_popup^ mapWindow;
 		db_popup^ dbWindow;
 		int data_i = 0;
+		bool updateReady = true;
 
-		delegate void DataUpdatedHandler(String^ lat, String^ lon);
-		event DataUpdatedHandler^ OnDataUpdated;
+		event SimpleHandler^ OnDataUpdated;
 
 		// Nunulinami/atstatomi rodomi duomenys
 		void ResetData() {
@@ -422,7 +423,7 @@ namespace GUI {
 			this->chartAcc->Series["AccX"]->Points->Clear();
 			this->chartAcc->Series["AccY"]->Points->Clear();
 			this->chartAcc->Series["AccZ"]->Points->Clear();
-			splitData = nullptr;
+			splitData->d = nullptr;
 		}
 
 		// Pridedami visi pasiekiami COM prievadai
@@ -433,40 +434,47 @@ namespace GUI {
 		}
 
 		// Atnaujinami duomenys
-		void UpdateData() {
+		public: void UpdateData() {
 			int accX, accY, accZ;
-			data_i++;
-			if (data_i >= 16)
+
+			if (updateReady == false) {
+				data_i++;
+			}
+			if (data_i == 8) {
 				data_i = 0;
+				updateReady = true;
+			}
 
 			// Atnaujinamas terminalas
 			this->textBoxTerminal->AppendText(serialData);
 			this->textBoxTerminal->ScrollToCaret();
 
 			// Išskaidomi duomenys
-			prevData = splitData;
-			splitData = serialData->Split(',');
+			prevData = splitData->d;
+			splitData->d = serialData->Split(',');
 
 			// Nustatomi duomenys
-			this->dataTime->Text = splitData[1];
-			coords = splitData[2] + ", " + splitData[3];
+			this->dataTime->Text = splitData->d[1];
+			coords = splitData->d[2] + ", " + splitData->d[3];
 			this->dataGPS->Text = coords;
-			this->dataSat->Text = splitData[4];
+			this->dataSat->Text = splitData->d[4];
 
 			// Konvertuojama į Int
-			Int32::TryParse(splitData[5], accX);
-			Int32::TryParse(splitData[6], accY);
-			Int32::TryParse(splitData[7], accZ);
+			Int32::TryParse(splitData->d[5], accX);
+			Int32::TryParse(splitData->d[6], accY);
+			Int32::TryParse(splitData->d[7], accZ);
 
 			// Duomenys pridedami į grafiką
 			this->chartAcc->Series["AccX"]->Points->Add(accX);
 			this->chartAcc->Series["AccY"]->Points->Add(accY);
 			this->chartAcc->Series["AccZ"]->Points->Add(accZ);
 
-			if (prevData != nullptr && splitData != nullptr) return;
+			if (prevData == nullptr || splitData->d == nullptr) return;
 			// Pasikeitė koordinatės
-			if ((prevData[2] != splitData[2] || prevData[3] != splitData[3]) && data_i == 0)
-				OnDataUpdated(splitData[2], splitData[3]);
+			if ((prevData[2] != splitData->d[2] || prevData[3] != splitData->d[3]) && updateReady == true) {
+				OnDataUpdated();
+				updateReady = false;
+			}
 		}
 
 		// Funkcija iškviečiama kai atsiranda nauji duomenys
@@ -478,7 +486,7 @@ namespace GUI {
 		// Išimamas handler, kai uždaromas langas
 		void MapClosed(Object^ sender, FormClosedEventArgs^ e) {
 			if (mapWindow != nullptr) {
-				OnDataUpdated -= gcnew DataUpdatedHandler(mapWindow, &map_popup::UpdateWeb);
+				OnDataUpdated -= gcnew SimpleHandler(mapWindow, &map_popup::UpdateWeb);
 				mapWindow = nullptr;
 			}
 		}
@@ -535,14 +543,14 @@ namespace GUI {
 
 		// Atidaryti kitą langą su žemėlapiu
 		private: System::Void buttonMap_Click(System::Object^ sender, System::EventArgs^ e) {
-			if (splitData == nullptr) {
+			if (splitData->d == nullptr) {
 				MessageBox::Show("Nėra duomenų");
 				return;
 			}
-			mapWindow = gcnew map_popup(splitData[2],splitData[3]);
+			mapWindow = gcnew map_popup(splitData);
 
 			// Pririšamas atnaujinimo event
-			OnDataUpdated += gcnew DataUpdatedHandler(mapWindow, &map_popup::UpdateWeb);
+			OnDataUpdated += gcnew SimpleHandler(mapWindow, &map_popup::UpdateWeb);
 			mapWindow->FormClosed += gcnew FormClosedEventHandler(this, &terminal::MapClosed);
 
 			mapWindow->Show();
@@ -550,7 +558,8 @@ namespace GUI {
 
 		// Atidaryti duomenų bazės langą
 		private: System::Void dbMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-			dbWindow = gcnew db_popup();
+			dbWindow = gcnew db_popup(splitData, gcnew SimpleHandler(this, &terminal::UpdateData));
+			
 			dbWindow->Show();
 		}
 };

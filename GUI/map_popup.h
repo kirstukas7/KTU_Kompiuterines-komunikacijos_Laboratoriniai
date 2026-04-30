@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <string>
+#include "AppData.h"
 
 namespace GUI {
 
@@ -16,12 +16,10 @@ namespace GUI {
 	public ref class map_popup : public System::Windows::Forms::Form
 	{
 	public:
-		map_popup(String^ lat, String^ lon)
+		map_popup(AppData^ data)
 		{
 			InitializeComponent();
-			
-			this->lat = lat;
-			this->lon = lon;
+			appData = data;
 		}
 
 	protected:
@@ -93,15 +91,13 @@ namespace GUI {
 
 		}
 #pragma endregion
-		String^ lat = L"";
-		String^ lon = L"";
-
-		public: void UpdateWeb(String^ nlat, String^ nlon) {
-			this->webView->Source = gcnew Uri(L"https://www.openstreetmap.org/?mlat=" + nlat + "&mlon=" + nlon + "&zoom=18", System::UriKind::Absolute);
+		AppData^ appData = nullptr;
+		public: void UpdateWeb() {
+			this->webView->Source = gcnew Uri(L"https://www.openstreetmap.org/?mlat=" + appData->d[2] + "&mlon=" + appData->d[3] + "&zoom=18", System::UriKind::Absolute);
 		}
 
 		private: System::Void map_popup_Load(System::Object^ sender, System::EventArgs^ e) {
-			UpdateWeb(lat, lon);
+			UpdateWeb();
 		}
 	};
 }

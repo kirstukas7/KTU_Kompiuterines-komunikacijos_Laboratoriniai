@@ -130,6 +130,7 @@
     <ClCompile Include="terminal.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppData.h" />
     <ClInclude Include="db_popup.h">
       <FileType>CppForm</FileType>
     </ClInclude>
