@@ -559,7 +559,6 @@ namespace GUI {
 
 		// Atidaryti duomenų bazės langą
 		private: System::Void dbMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-			if (splitData->d == nullptr) splitData->d = gcnew array<String^>(8);
 			dbWindow = gcnew db_popup(splitData, gcnew SimpleHandler(this, &terminal::UpdateData));
 			
 			dbWindow->Show();

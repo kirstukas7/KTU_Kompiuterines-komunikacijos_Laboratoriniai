@@ -268,7 +268,7 @@ namespace GUI {
 
 		void ReadFromDB() {
 			try {
-				if (appData->d == nullptr) { MessageBox::Show("appData->d is null"); return; }
+				if (appData->d == nullptr) appData->d = gcnew array<String^>(8);
 				String^ sql = "SELECT LAIKAS, PLATUMA, ILGUMA, PALYDOVAI, ACCX, ACCY, ACCZ FROM "+this->textBoxTable->Text+" ORDER BY ID DESC LIMIT 1";
 				MySqlCommand^ cmd = gcnew MySqlCommand(sql, conn);
 				MySqlDataReader^ rdr = cmd->ExecuteReader();
